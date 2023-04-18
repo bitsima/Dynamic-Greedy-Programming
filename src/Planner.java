@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class Planner {
@@ -17,6 +18,7 @@ public class Planner {
         this.taskArray = taskArray;
         this.compatibility = new Integer[taskArray.length];
         maxWeight = new Double[taskArray.length];
+        Arrays.fill(maxWeight, -1.0);
 
         this.planDynamic = new ArrayList<>();
         this.planGreedy = new ArrayList<>();
@@ -74,7 +76,21 @@ public class Planner {
      * {@link #planDynamic} must be filled after calling this method
      */
     public void solveDynamic(int i) {
-        // YOUR CODE HERE
+        if (i == -1) {
+            return;
+        }
+        System.out.printf("Called solveDynamic(%d)\n", i);
+        double curr = taskArray[i].getWeight();
+        if (compatibility[i] != -1) {
+            curr += maxWeight[compatibility[i]];
+        }
+
+        if (curr > maxWeight[i - 1]) {
+            planDynamic.add(taskArray[i]);
+            solveDynamic(compatibility[i]);
+        } else {
+            solveDynamic(i - 1);
+        }
     }
 
     /**
@@ -85,8 +101,15 @@ public class Planner {
      * called before or not
      */
     public Double calculateMaxWeight(int i) {
-        // YOUR CODE HERE
-        return -1.0;
+        System.out.printf("Called calculateMaxWeight(%d)\n", i);
+        if (i == -1) {
+            return 0.0;
+        }
+        if (maxWeight[i] == -1.0) {
+            maxWeight[i] = Math.max(taskArray[i].getWeight() + calculateMaxWeight(compatibility[i]),
+                    calculateMaxWeight(i - 1));
+        }
+        return maxWeight[i];
     }
 
     /**
