@@ -28,7 +28,24 @@ public class Planner {
      *         returns -1 if there are no compatible {@link Task}s.
      */
     public int binarySearch(int index) {
-        // YOUR CODE HERE
+        int low = 0;
+        int high = index;
+        while (high - low > 1) {
+            int mid = (high + low) / 2;
+            if (taskArray[index].getStartTime().compareTo(taskArray[mid].getFinishTime()) > 0 ||
+                    taskArray[index].getStartTime().compareTo(taskArray[mid].getFinishTime()) == 0) {
+                low = mid;
+            } else {
+                high = mid;
+            }
+        }
+        if (taskArray[index].getStartTime().compareTo(taskArray[low].getFinishTime()) > 0
+                || taskArray[index].getStartTime().compareTo(taskArray[low].getFinishTime()) == 0) {
+            return low;
+        } else if (taskArray[index].getStartTime().compareTo(taskArray[high].getFinishTime()) > 0
+                || taskArray[index].getStartTime().compareTo(taskArray[high].getFinishTime()) == 0) {
+            return high;
+        }
         return -1;
     }
 
@@ -36,7 +53,9 @@ public class Planner {
      * {@link #compatibility} must be filled after calling this method
      */
     public void calculateCompatibility() {
-        // YOUR CODE HERE
+        for (int index = 0; index < taskArray.length; index++) {
+            compatibility[index] = binarySearch(index);
+        }
     }
 
     /**
@@ -81,7 +100,16 @@ public class Planner {
      * This function is for generating a plan using the greedy approach.
      */
     public ArrayList<Task> planGreedy() {
-        // YOUR CODE HERE
+        planGreedy.add(taskArray[0]);
+        int lastChosenIndex = 0;
+
+        for (int i = 1; i < compatibility.length; i++) {
+            if (compatibility[i] == lastChosenIndex) {
+                planGreedy.add(taskArray[i]);
+                lastChosenIndex = i;
+            }
+        }
+
         return planGreedy;
     }
 }
