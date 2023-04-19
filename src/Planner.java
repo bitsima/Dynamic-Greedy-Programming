@@ -68,7 +68,16 @@ public class Planner {
      * @return Returns a list of planned tasks.
      */
     public ArrayList<Task> planDynamic() {
-        // YOUR CODE HERE
+        calculateCompatibility();
+        System.out.println("Calculating max array\n---------------------");
+        calculateMaxWeight(taskArray.length - 1);
+        System.out.println("\nCalculating the dynamic solution\n--------------------------------");
+        solveDynamic(taskArray.length - 1);
+        System.out.println("\nDynamic Schedule\n----------------");
+        for (int i = planDynamic.size() - 1; i >= 0; i--) {
+            System.out.printf("At %s, %s.\n", planDynamic.get(i).getStartTime(), planDynamic.get(i).getName());
+        }
+        System.out.println();
         return planDynamic;
     }
 
@@ -76,7 +85,7 @@ public class Planner {
      * {@link #planDynamic} must be filled after calling this method
      */
     public void solveDynamic(int i) {
-        if (i == -1) {
+        if (i == -1 || i == 0) {
             return;
         }
         System.out.printf("Called solveDynamic(%d)\n", i);
@@ -123,16 +132,21 @@ public class Planner {
      * This function is for generating a plan using the greedy approach.
      */
     public ArrayList<Task> planGreedy() {
+        System.out.println("Greedy Schedule\n---------------");
         planGreedy.add(taskArray[0]);
         int lastChosenIndex = 0;
 
-        for (int i = 1; i < compatibility.length; i++) {
-            if (compatibility[i] == lastChosenIndex) {
+        for (int i = 1; i < taskArray.length; i++) {
+            if (taskArray[i].getStartTime().compareTo(taskArray[lastChosenIndex].getFinishTime()) > 0 ||
+                    taskArray[i].getStartTime().compareTo(taskArray[lastChosenIndex].getFinishTime()) == 0) {
                 planGreedy.add(taskArray[i]);
                 lastChosenIndex = i;
             }
         }
 
+        for (int i = 0; i < planGreedy.size(); i++) {
+            System.out.printf("At %s, %s.\n", planGreedy.get(i).getStartTime(), planGreedy.get(i).getName());
+        }
         return planGreedy;
     }
 }

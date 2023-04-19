@@ -11,12 +11,11 @@ public class Main {
      * A {@link Planner} instance must be instantiated here
      */
     public static void main(String[] args) throws IOException {
-        String file = "input6.json"; // args[0]; //get file name as an argument
+        String file = "input10.json"; // args[0]; //get file name as an argument
         Task[] tasks = parseJSON(file);
         Arrays.sort(tasks); // sort task array for binary search
         Planner planner = new Planner(tasks);
         planner.planDynamic();
-        System.out.println();
         planner.planGreedy();
     }
 
