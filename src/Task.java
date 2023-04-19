@@ -31,18 +31,22 @@ public class Task implements Comparable {
     }
 
     /**
-     * Finish time is calculated here
+     * Finish time is calculated here.
      *
      * @return calculated finish time as String
      */
     public String getFinishTime() {
         String[] startTimeArr = this.start.split(":");
         int finHour = Integer.parseInt(startTimeArr[0]) + duration;
-        return Integer.toString(finHour) + ":" + startTimeArr[1];
+        String finHourStr = Integer.toString(finHour);
+        if (finHourStr.length() == 1) {
+            finHourStr = "0" + finHourStr;
+        }
+        return finHourStr + ":" + startTimeArr[1];
     }
 
     /**
-     * Weight calculation is performed here
+     * Weight calculation is performed here.
      *
      * @return calculated weight
      */

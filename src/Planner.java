@@ -13,7 +13,6 @@ public class Planner {
     public Planner(Task[] taskArray) {
 
         // Should be instantiated with a Task array
-        // All the properties of this class should be initialized here
 
         this.taskArray = taskArray;
         this.compatibility = new Integer[taskArray.length];
@@ -52,7 +51,7 @@ public class Planner {
     }
 
     /**
-     * {@link #compatibility} must be filled after calling this method
+     * {@link #compatibility} is filled after calling this method
      */
     public void calculateCompatibility() {
         for (int index = 0; index < taskArray.length; index++) {
@@ -74,21 +73,22 @@ public class Planner {
         System.out.println("\nCalculating the dynamic solution\n--------------------------------");
         solveDynamic(taskArray.length - 1);
         System.out.println("\nDynamic Schedule\n----------------");
-        for (int i = planDynamic.size() - 1; i >= 0; i--) {
+        Collections.reverse(planDynamic);
+        for (int i = 0; i < planDynamic.size(); i++) {
             System.out.printf("At %s, %s.\n", planDynamic.get(i).getStartTime(), planDynamic.get(i).getName());
         }
-        System.out.println();
         return planDynamic;
     }
 
     /**
-     * {@link #planDynamic} must be filled after calling this method
+     * {@link #planDynamic} is filled after calling this method
      */
     public void solveDynamic(int i) {
-        if (i == -1 || i == 0) {
+        System.out.printf("Called solveDynamic(%d)\n", i);
+        if (i == 0) {
+            planDynamic.add(taskArray[i]);
             return;
         }
-        System.out.printf("Called solveDynamic(%d)\n", i);
         double curr = taskArray[i].getWeight();
         if (compatibility[i] != -1) {
             curr += maxWeight[compatibility[i]];
@@ -96,18 +96,20 @@ public class Planner {
 
         if (curr > maxWeight[i - 1]) {
             planDynamic.add(taskArray[i]);
-            solveDynamic(compatibility[i]);
+            if (compatibility[i] != -1) {
+                solveDynamic(compatibility[i]);
+            }
         } else {
             solveDynamic(i - 1);
         }
     }
 
     /**
-     * {@link #maxWeight} must be filled after calling this method
+     * {@link #maxWeight} is filled after calling this method
      */
     /*
      * This function calculates maximum weights and prints out whether it has been
-     * called before or not
+     * called before or not.
      */
     public Double calculateMaxWeight(int i) {
         System.out.printf("Called calculateMaxWeight(%d)\n", i);
@@ -122,7 +124,7 @@ public class Planner {
     }
 
     /**
-     * {@link #planGreedy} must be filled after calling this method
+     * {@link #planGreedy} is filled after calling this method
      * Uses {@link #taskArray} property
      *
      * @return Returns a list of scheduled assignments
